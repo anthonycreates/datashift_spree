@@ -3,6 +3,8 @@
 # Date ::     Jan 2011
 # License::   MIT. Free, Open Source.
 #
+
+require 'spree_base_loader'
 require 'loader_base'
 
 module DataShift
@@ -62,14 +64,16 @@ module DataShift
         # TODO - current relies on correct order - i.e lookup column must come before attachment
         
         @@path_headers ||= ['attachment', 'images', 'path']
-           
-        operator = @current_method_detail.operator
+        
+        current_method_detail = @populator.current_method_detail
+        current_value         = @populator.current_value
+        operator              = current_method_detail.operator
         
         if(current_value && ImageLoader::acceptable_path_headers.include?(operator) )
          
           add_images( @load_object ) if(@load_object)
           
-        elsif(current_value && @current_method_detail.operator )    
+        elsif(current_value && operator )    
           
           # find the db record to assign our Image usually expect either SKU (Variant) or Name (product)
           if( MethodDictionary::find_method_detail_if_column(@@product_klass, operator) )

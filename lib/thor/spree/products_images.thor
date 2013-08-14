@@ -69,16 +69,19 @@ module DatashiftSpree
     desc "attach_images", "Populate Products with images from Excel/CSV\nProvide column SKU or Name\nColumn containing full path to image can be named 'attachment', 'images' or 'path' "
     # :dummy => dummy run without actual saving to DB
     method_option :input, :aliases => '-i', :required => true, :desc => "The 2 column import file (.xls or .csv)"
+    method_option :verbose, :aliases => '-v', :type => :boolean, :desc => "Verbose logging"
 
     def attach_images()
 
       require File.expand_path('config/environment.rb')
 
+      input = options[:input]
+
       require 'image_loader'
 
-      loader = DataShift::SpreeHelper::ImageLoader.new(nil, options)
+      loader = DataShift::SpreeHelper::ImageLoader.new(nil, {:verbose => options[:verbose]})
 
-      loader.perform_load( options[:input], options )
+      loader.perform_load(input, options)
     end
 
 
